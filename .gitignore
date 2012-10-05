@@ -1,3 +1,5 @@
 
 .DS_Store
 
+# need to add jspdf yourself
+external/*

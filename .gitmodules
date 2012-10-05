@@ -1,0 +1,3 @@
+[submodule "external/jspdf"]
+	path = external/jspdf
+	url = git://github.com/MrRio/jsPDF.git

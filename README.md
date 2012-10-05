@@ -1,9 +1,11 @@
 A PDFRenderer for three.js
 ====================
 
-three.js, http://mrdoob.github.com/three.js/
+three.js, 
+http://mrdoob.github.com/three.js/
 
-Based on SVGRenderer.js by the MrDoob.
+Based on SVGRenderer.js by the MrDoob, three.js
 
-Utilizing PDF horsepower from jsPDF, http://code.google.com/p/jspdf/
+Utilizing PDF horsepower from jsPDF by James Hall,
+https://github.com/MrRio/jsPDF
 

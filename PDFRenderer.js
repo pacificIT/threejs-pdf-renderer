@@ -44,6 +44,8 @@ if ( jsPDF && THREE && !'PDFRenderer' in THREE ) {
 
 			self = this;
 			iframe = document.createElement('iframe');
+			iframe.setAttribute('type',  'application/pdf');
+			iframe.setAttribute('style', 'border:0x solid transparent !important');
 
 			projector = new THREE.Projector();
 
@@ -76,7 +78,7 @@ if ( jsPDF && THREE && !'PDFRenderer' in THREE ) {
 					case "low":  quality = 0; break;
 				}
 			},
-			setSize = function( w, h ) {
+			setSize : function( w, h ) {
 
 				width = w; 
 				height = h;
@@ -87,7 +89,10 @@ if ( jsPDF && THREE && !'PDFRenderer' in THREE ) {
 				ifrmae.setAttribute( 'height', height );
 
 				clipRect.set( - widthHalf, - heightHalf, widthHalf, heightHalf );
-			}	
+			},
+			clear : function () {
+				
+			}
 		};
 		
 		return PDFRenderer;

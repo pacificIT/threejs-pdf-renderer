@@ -473,6 +473,9 @@ if ( jsPDF && THREE && !('PDFRenderer' in THREE) ) {
 
 			}, // render()
 
+			getPDF : function () {
+				return pdf;
+			}
 		};
 		
 		return PDFRenderer;

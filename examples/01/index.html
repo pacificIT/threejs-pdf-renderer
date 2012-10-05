@@ -26,10 +26,10 @@
 				var scene = new THREE.Scene();
 				scene.add( camera );
 
-				var plane = new THREE.Mesh( new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({color: 0xFF00FF}) );
+				var plane = new THREE.Mesh( new THREE.PlaneGeometry(120, 120), new THREE.MeshBasicMaterial({color: 0x003366}) );
 				scene.add( plane );
 
-				var sphereMaterial = new THREE.MeshLambertMaterial({ color: 0xCC0000 });
+				var sphereMaterial = new THREE.MeshLambertMaterial({ color: 0xCC0044 });
 				var radius = 50, segments = 16, rings = 16;
 				var sphere = new THREE.Mesh( new THREE.SphereGeometry( radius, segments, rings), sphereMaterial );
 				scene.add( sphere );
@@ -40,16 +40,25 @@
 				pointLight.position.z = 130;
 				scene.add(pointLight);
 
-				var torus = new THREE.Mesh( new THREE.TorusKnotGeometry(60, 10, 100), new THREE.MeshLambertMaterial({ color: 0x00DD22 }) );
+				var torus = new THREE.Mesh( new THREE.TorusKnotGeometry(60, 10, 100), new THREE.MeshLambertMaterial({ color: 0x33DDbb }) );
 				scene.add( torus );
 
 				var geometry = new THREE.Geometry();
 				for ( var i = 0; i <= 360; i+=12 ) {
 					var a = (i/360.0)*(2*Math.PI);
-					geometry.vertices.push( new THREE.Vector3( 100 * Math.cos(a), 100 * Math.sin(a), 0 ) );
+					geometry.vertices.push( new THREE.Vector3( 120 * Math.cos(a), 120 * Math.sin(a), 0 ) );
 				}
 				var line = new THREE.Line( geometry, new THREE.LineBasicMaterial({ color: 0x993300, linewidth: 3 }) );
 				scene.add( line );
+
+				var tetra = new THREE.Mesh( new THREE.TetrahedronGeometry(10), new THREE.MeshLambertMaterial({color: 0x00FF00}) );
+				tetra.translateX(100);
+				scene.add( tetra.clone() );
+
+				if ( renderer instanceof THREE.PDFRenderer ) {
+					var pdf = renderer.getPDF();
+					pdf.text( 20, 30, "PDF renderer for three.js" );
+				}
 
 				renderer.render( scene, camera );
 			}

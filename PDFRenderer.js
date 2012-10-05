@@ -318,8 +318,6 @@ if ( jsPDF && THREE && !('PDFRenderer' in THREE) ) {
 			this.autoClear = true;
 			this.sortObjects = true;
 			this.sortElements = true;
-
-			pdf = new jsPDF('landscape','pt', 'a4');
 		};
 
 		PDFRenderer.prototype = {
@@ -349,6 +347,8 @@ if ( jsPDF && THREE && !('PDFRenderer' in THREE) ) {
 
 				iframe.setAttribute( 'width',  width );
 				iframe.setAttribute( 'height', height );
+
+				pdf = new jsPDF( 'portrait','pt', [w, h]);
 
 				clipRect.set( - widthHalf, - heightHalf, widthHalf, heightHalf );
 			},

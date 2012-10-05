@@ -3,7 +3,6 @@
 	<head>
 		<meta charset="utf8">
 		<title>A simple jsPDF test</title>
-		<!-- packaged and minified jspdf.js, sprintf.js, base64.js -->
 		<script src="../../external/jspdf/dist/jspdf.min.js" type="text/javascript"></script>
 	</head>
 	<body>
@@ -14,19 +13,28 @@
 				var iframe = document.createElement('iframe');
 				iframe.setAttribute('type', 'application/pdf'); // need this?
 				iframe.setAttribute('width',  '100%');
-				iframe.setAttribute('height', 300);
+				iframe.setAttribute('height', 600);
 				iframe.setAttribute('style', 'border:0px solid transparent !important');
 
 				document.getElementById('page').appendChild(iframe);
 				
-				var doc = new jsPDF('landscape','pt');
-				doc.text(20, 20, 'Hello world!');
-				doc.text(20, 30, 'This is client-side Javascript, pumping out a PDF.');
-				doc.addPage();
-				doc.text(20, 20, 'Do you like that?');
+				var doc = new jsPDF('landscape','pt', 'a4');
 
-				var data = doc.output('datauristring');
-				iframe.src = data;
+				doc.setTextColor( 120 );
+				doc.text( 20, 40, 'Hello world!');
+				doc.text( 20, 70, 'This is client-side Javascript, pumping out a PDF.');
+
+				doc.setDrawColor( 255,0,255 );
+				doc.setFillColor( 255,255,0 );
+				doc.lines( [[0,0],[100,0],[0,100],[-100,0],[0,-100]], 40, 40, [1,1], 'FD' ); // filled, outlined
+
+				doc.triangle( 100, 100, 140, 100, 120, 140, 'F' ); // fill only
+				doc.triangle( 120, 120, 160, 120, 140, 160, 'S' ); // outline only
+
+				doc.addPage();
+				doc.text( 20, 40, 'Do you like that?');
+
+				iframe.src = doc.output('datauristring');
 			}
 		</script>
 		</div>

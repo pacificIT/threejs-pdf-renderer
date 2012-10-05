@@ -26,7 +26,7 @@
 				var scene = new THREE.Scene();
 				scene.add( camera );
 
-				var plane = new THREE.Mesh( new THREE.PlaneGeometry(200, 200), new THREE.MeshBasicMaterial({color: 0xFF00FF}) );
+				var plane = new THREE.Mesh( new THREE.PlaneGeometry(140, 140), new THREE.MeshBasicMaterial({color: 0xFF00FF}) );
 				scene.add( plane );
 
 				var sphereMaterial = new THREE.MeshLambertMaterial({ color: 0xCC0000 });
@@ -39,6 +39,17 @@
 				pointLight.position.y = 50;
 				pointLight.position.z = 130;
 				scene.add(pointLight);
+
+				var torus = new THREE.Mesh( new THREE.TorusKnotGeometry(60, 10, 100), new THREE.MeshLambertMaterial({ color: 0x00DD22 }) );
+				scene.add( torus );
+
+				var geometry = new THREE.Geometry();
+				for ( var i = 0; i <= 360; i+=12 ) {
+					var a = (i/360.0)*(2*Math.PI);
+					geometry.vertices.push( new THREE.Vector3( 100 * Math.cos(a), 100 * Math.sin(a), 0 ) );
+				}
+				var line = new THREE.Line( geometry, new THREE.LineBasicMaterial({ color: 0x993300, linewidth: 3 }) );
+				scene.add( line );
 
 				renderer.render( scene, camera );
 			}

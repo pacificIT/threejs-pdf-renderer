@@ -124,47 +124,10 @@ if ( jsPDF && THREE && !('PDFRenderer' in THREE) ) {
 			}
 		}
 
-		function renderParticle( v1, element, material, scene ) {
-
-			/*
-			_svgNode = getCircleNode( _circleCount++ );
-			_svgNode.setAttribute( 'cx', v1.x );
-			_svgNode.setAttribute( 'cy', v1.y );
-			_svgNode.setAttribute( 'r', element.scale.x * widthHalf );
-
-			if ( material instanceof THREE.ParticleCircleMaterial ) {
-
-				if ( _enableLighting ) {
-
-					_color.r = _ambientLight.r + _directionalLights.r + _pointLights.r;
-					_color.g = _ambientLight.g + _directionalLights.g + _pointLights.g;
-					_color.b = _ambientLight.b + _directionalLights.b + _pointLights.b;
-
-					_color.r = material.color.r * _color.r;
-					_color.g = material.color.g * _color.g;
-					_color.b = material.color.b * _color.b;
-
-					_color.updateStyleString();
-
-				} else {
-
-					_color = material.color;
-
-				}
-
-				_svgNode.setAttribute( 'style', 'fill: ' + _color.__styleString );
-
-			}
-
-			_svg.appendChild( _svgNode );
-			*/
-
-		}
-
 		var setStyleFromMaterial = function ( material ) {
 
-			pdf.setDrawColor( material.color.r, material.color.g, material.color.b );
-			pdf.setFillColor( material.color.r, material.color.g, material.color.b );
+			pdf.setDrawColor( material.color.r*255, material.color.g*255, material.color.b*255 );
+			pdf.setFillColor( material.color.r*255, material.color.g*255, material.color.b*255 );
 
 			// TODO: material.opacity ??
 
@@ -235,14 +198,54 @@ if ( jsPDF && THREE && !('PDFRenderer' in THREE) ) {
 			pdf.setFillColor( color.r*255, color.g*255, color.b*255 );
 		}
 
+		function renderParticle( v1, element, material, scene ) {
+
+			/*
+			_svgNode = getCircleNode( _circleCount++ );
+			_svgNode.setAttribute( 'cx', v1.x );
+			_svgNode.setAttribute( 'cy', v1.y );
+			_svgNode.setAttribute( 'r', element.scale.x * widthHalf );
+
+			if ( material instanceof THREE.ParticleCircleMaterial ) {
+
+				if ( _enableLighting ) {
+
+					_color.r = _ambientLight.r + _directionalLights.r + _pointLights.r;
+					_color.g = _ambientLight.g + _directionalLights.g + _pointLights.g;
+					_color.b = _ambientLight.b + _directionalLights.b + _pointLights.b;
+
+					_color.r = material.color.r * _color.r;
+					_color.g = material.color.g * _color.g;
+					_color.b = material.color.b * _color.b;
+
+					_color.updateStyleString();
+
+				} else {
+
+					_color = material.color;
+
+				}
+
+				_svgNode.setAttribute( 'style', 'fill: ' + _color.__styleString );
+
+			}
+
+			_svg.appendChild( _svgNode );
+			*/
+
+		}
+
 		function renderLine ( v1, v2, element, material, scene ) {
 
 			if ( material instanceof THREE.LineBasicMaterial ) {
+
 				setStyleFromMaterial( material );
 			}
 
-			pdf.line( v1.positionScreen.x, v1.positionScreen.y,
-					  v2.positionScreen.x, v2.positionScreen.y );  // outline only by default
+			pdf.lines( [[v2.positionScreen.x-v1.positionScreen.x, v2.positionScreen.y-v1.positionScreen.y]],
+					   v1.positionScreen.x, v1.positionScreen.y,
+					   [1,1],
+					   'S' );  // outline only by default
 		}
 
 		function renderFace3 ( v1, v2, v3, element, material, scene ) {
@@ -271,14 +274,14 @@ if ( jsPDF && THREE && !('PDFRenderer' in THREE) ) {
 			setColorForElement( element, material );
 
 			var lines = [];
-			lines.push( [v1.positionScreen.x,  v1.positionScreen.y] );
+			//lines.push( [v1.positionScreen.x,  v1.positionScreen.y] );
 			lines.push( [v2.positionScreen.x - v1.positionScreen.x, v2.positionScreen.y - v1.positionScreen.y] );
 			lines.push( [v3.positionScreen.x - v2.positionScreen.x, v3.positionScreen.y - v2.positionScreen.y] );
 			lines.push( [v4.positionScreen.x - v3.positionScreen.x, v4.positionScreen.y - v3.positionScreen.y] );
 			lines.push( [v1.positionScreen.x - v4.positionScreen.x, v1.positionScreen.y - v4.positionScreen.y] );
 
 			pdf.lines( lines,
-					   widthHalf, heightHalf,
+					   v1.positionScreen.x,  v1.positionScreen.y,
 					   [1,1],
 					   material.wireframe ? 'S' : 'F' );
 		}
@@ -320,6 +323,13 @@ if ( jsPDF && THREE && !('PDFRenderer' in THREE) ) {
 			this.sortElements = true;
 		};
 
+		var positionScreenToPage = function ( position ) {
+			position.x *= widthHalf;
+			position.x += widthHalf;
+			position.y *= -heightHalf;
+			position.y += heightHalf;
+		}
+
 		PDFRenderer.prototype = {
 			
 			info : {
@@ -350,7 +360,7 @@ if ( jsPDF && THREE && !('PDFRenderer' in THREE) ) {
 
 				pdf = new jsPDF( 'portrait','pt', [w, h]);
 
-				clipRect.set( - widthHalf, - heightHalf, widthHalf, heightHalf );
+				clipRect.set( 0, 0, width, height );
 			},
 			
 			clear : function () {
@@ -396,8 +406,8 @@ if ( jsPDF && THREE && !('PDFRenderer' in THREE) ) {
 					if ( element instanceof THREE.RenderableParticle ) {
 
 						vec1 = element;
-						vec1.x *= widthHalf; 
-						vec1.y *= -heightHalf;
+
+						positionScreenToPage( vec1.positionScreen );
 
 						renderParticle( vec1, element, material, scene );
 
@@ -405,8 +415,8 @@ if ( jsPDF && THREE && !('PDFRenderer' in THREE) ) {
 
 						vec1 = element.v1; vec2 = element.v2;
 
-						vec1.positionScreen.x *= widthHalf; vec1.positionScreen.y *= - heightHalf;
-						vec2.positionScreen.x *= widthHalf; vec2.positionScreen.y *= - heightHalf;
+						positionScreenToPage( vec1.positionScreen );
+						positionScreenToPage( vec2.positionScreen );
 
 						bboxRect.addPoint( vec1.positionScreen.x, vec1.positionScreen.y );
 						bboxRect.addPoint( vec2.positionScreen.x, vec2.positionScreen.y );
@@ -421,9 +431,9 @@ if ( jsPDF && THREE && !('PDFRenderer' in THREE) ) {
 
 						vec1 = element.v1; vec2 = element.v2; vec3 = element.v3;
 
-						vec1.positionScreen.x *= widthHalf; vec1.positionScreen.y *= - heightHalf;
-						vec2.positionScreen.x *= widthHalf; vec2.positionScreen.y *= - heightHalf;
-						vec3.positionScreen.x *= widthHalf; vec3.positionScreen.y *= - heightHalf;
+						positionScreenToPage( vec1.positionScreen );
+						positionScreenToPage( vec2.positionScreen );
+						positionScreenToPage( vec3.positionScreen );
 
 						bboxRect.addPoint( vec1.positionScreen.x, vec1.positionScreen.y );
 						bboxRect.addPoint( vec2.positionScreen.x, vec2.positionScreen.y );
@@ -439,10 +449,10 @@ if ( jsPDF && THREE && !('PDFRenderer' in THREE) ) {
 
 						vec1 = element.v1; vec2 = element.v2; vec3 = element.v3; vec4 = element.v4;
 
-						vec1.positionScreen.x *= widthHalf; vec1.positionScreen.y *= -heightHalf;
-						vec2.positionScreen.x *= widthHalf; vec2.positionScreen.y *= -heightHalf;
-						vec3.positionScreen.x *= widthHalf; vec3.positionScreen.y *= -heightHalf;
-						vec4.positionScreen.x *= widthHalf; vec4.positionScreen.y *= -heightHalf;
+						positionScreenToPage( vec1.positionScreen );
+						positionScreenToPage( vec2.positionScreen );
+						positionScreenToPage( vec3.positionScreen );
+						positionScreenToPage( vec4.positionScreen );
 
 						bboxRect.addPoint( vec1.positionScreen.x, vec1.positionScreen.y );
 						bboxRect.addPoint( vec2.positionScreen.x, vec2.positionScreen.y );

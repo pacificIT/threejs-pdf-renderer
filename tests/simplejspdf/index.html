@@ -40,6 +40,9 @@
 				iframe.src = doc.output('datauristring');
 			}
 
+			/**
+			 *	Faking some beginShape() ... endShape() functionality. I miss Processing.
+			 */
 			var ShapeRecorder = function () {
 				this.position;
 				this.recorder;
@@ -54,6 +57,7 @@
 					this.position[1] = y;
 					return this;
 				}
+				// TODO: not tested, needs fixing
 				// this.bezierVertex = function ( hx1, hy1, hx2, hy2, x2, y2 ) {
 				// 	if ( !this.position ) {
 				// 		this.position = [0,0];

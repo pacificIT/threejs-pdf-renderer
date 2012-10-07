@@ -35,7 +35,7 @@ if ( jsPDF && THREE && !('PDFRenderer' in THREE) ) {
 
 		var renderData, elements, lights;
 		var pathCount, circleCount, lineCount;
-		var vec1, vec2, vec3;
+		var vec1, vec2, vec3, vec4;
 
 		/*
 		 +	Private functions
@@ -200,39 +200,15 @@ if ( jsPDF && THREE && !('PDFRenderer' in THREE) ) {
 
 		function renderParticle( v1, element, material, scene ) {
 
-			/*
-			_svgNode = getCircleNode( _circleCount++ );
-			_svgNode.setAttribute( 'cx', v1.x );
-			_svgNode.setAttribute( 'cy', v1.y );
-			_svgNode.setAttribute( 'r', element.scale.x * widthHalf );
+			if ( material instanceof THREE.LineBasicMaterial ) {
 
-			if ( material instanceof THREE.ParticleCircleMaterial ) {
-
-				if ( _enableLighting ) {
-
-					_color.r = _ambientLight.r + _directionalLights.r + _pointLights.r;
-					_color.g = _ambientLight.g + _directionalLights.g + _pointLights.g;
-					_color.b = _ambientLight.b + _directionalLights.b + _pointLights.b;
-
-					_color.r = material.color.r * _color.r;
-					_color.g = material.color.g * _color.g;
-					_color.b = material.color.b * _color.b;
-
-					_color.updateStyleString();
-
-				} else {
-
-					_color = material.color;
-
-				}
-
-				_svgNode.setAttribute( 'style', 'fill: ' + _color.__styleString );
-
+				setStyleFromMaterial( material );
 			}
 
-			_svg.appendChild( _svgNode );
-			*/
-
+			pdf.lines( [[1, 1]],
+					   v1.positionScreen.x, v1.positionScreen.y,
+					   [1,1],
+					   'S' );  // outline only by default
 		}
 
 		function renderLine ( v1, v2, element, material, scene ) {
@@ -286,7 +262,7 @@ if ( jsPDF && THREE && !('PDFRenderer' in THREE) ) {
 					   material.wireframe ? 'S' : 'F' );
 		}
 
-		var normalToComponent = function () {
+		var normalToComponent = function ( normal ) {
 			var component = ( normal + 1 ) * 0.5;
 			return component < 0 ? 0 : ( component > 1 ? 1 : component );
 		}

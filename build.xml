@@ -1,5 +1,37 @@
-<project default="build">
-	<target name="build">
-		
+<?xml version="1.0"?>
+<project basedir="." default="build">
+
+	<property name="closureCompilerJar" value="/usr/local/closure/compiler.jar" />
+
+	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" 
+			 classpath="${closureCompilerJar}" />
+  	
+  	<target name="compile">
+
+  		<delete dir="build" />
+  		<mkdir dir="build" />
+
+		<jscomp compilationLevel="simple" 
+				warning="default" 
+		        debug="false" 
+		        prettyprint="true"
+		        output="${basedir}/build/PDFRenderer.min.js">
+
+			<!-- externs dir="${basedir}/external">
+				<file name="jsPDF/jsPDF.js" />
+				<file name="three/build/three.js" />
+			</externs -->
+
+			<sources dir="${basedir}/src">
+				<file name="PDFRenderer.js" />
+			</sources>
+
+		</jscomp>
+
 	</target>
+
+	<target name="build" depends="compile">
+
+	</target>
+
 </project>

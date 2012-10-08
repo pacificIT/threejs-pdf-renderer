@@ -10,15 +10,24 @@
 		+
 		L + + + + + + + + + + + + + + + + + + + + + + + + -->
 
+		<script src="../libs/Detector.js" type="text/javascript"></script>
 		<script src="../libs/jspdf.min.js" type="text/javascript"></script>
 		<script src="../libs/three.min.js" type="text/javascript"></script>
 		<script src="../libs/PDFRenderer.js" type="text/javascript"></script>
+		<script src="../libs/SVGRenderer.js" type="text/javascript"></script>
 		<script type="text/javascript">
 		window.onload = function () {
 
 			var element = document.getElementById('three-container');
 
-			var renderer = new THREE.WebGLRenderer();
+			var renderer = null;
+			if ( Detector.webgl ) {
+				renderer = new THREE.WebGLRenderer();
+			} else if ( Detector.canvas ) {
+				renderer = new THREE.CanvasRenderer();
+			} else if ( document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Shape", "1.0") ) {
+				renderer = new THREE.SVGRenderer();
+			}
 			renderer.setSize( element.clientWidth, element.clientHeight );
 
 			element.appendChild( renderer.domElement );
@@ -93,6 +102,6 @@
 	</head>
 	<body>
 		<div id="three-container" style="width:49%;height:400px;float:left;"></div>
-		<div id="three-pdf-frame" style="width:49%;height:400px;float:right;"></div>
+		<div id="three-pdf-frame" style="width:49%;height:400px;float:right;">If your browser does not support inline PDF display it will generate a download from it ... so watch your downloads queue and folder.</div>
 	</body>
 </html>

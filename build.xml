@@ -31,8 +31,11 @@
 	</target>
 
 	<target name="build" depends="compile">
+
 		<copy file="${basedir}/external/jspdf/dist/jspdf.min.js" toDir="${basedir}/examples/libs/" />
 		<copy file="${basedir}/external/three/build/three.min.js" toDir="${basedir}/examples/libs/" />
+		<copy file="${basedir}/external/three/examples/js/Detector.js" toDir="${basedir}/examples/libs/" />
+		<copy file="${basedir}/external/three/examples/js/renderers/SVGRenderer.js" toDir="${basedir}/examples/libs/" />
 
 		<copy file="${basedir}/src/PDFRenderer.js" toDir="${basedir}/examples/libs/" />
 		<copy file="${basedir}/build/PDFRenderer.min.js" toDir="${basedir}/examples/libs/" />
